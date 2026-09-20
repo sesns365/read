@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>小丑魚和海葵｜互動式閱讀策略測驗</title>
+<style>
+:root{
+  --bg:#f3f7fa; --card:#ffffff; --ink:#24323d; --muted:#667784; --line:#dce7ed;
+  --primary:#4f8f93; --primary-dark:#39787c; --primary-soft:#e7f3f3;
+  --ok:#e8f6ec; --ok-b:#6fb785; --bad:#fdeced; --bad-b:#d98389; --warn:#fff8df;
+  --article-font:18px; --article-line:1.8; --shadow:0 4px 16px rgba(40,70,90,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif}
+button,select,input{font:inherit}
+button{min-height:44px;border:1px solid transparent;border-radius:12px;padding:10px 16px;cursor:pointer;font-weight:700;touch-action:manipulation}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid rgba(79,143,147,.28);outline-offset:2px}
+button:disabled{cursor:not-allowed;opacity:.55}
+.primary{background:var(--primary);color:#fff}.primary:hover:not(:disabled){background:var(--primary-dark)}
+.secondary{background:#fff;color:var(--ink);border-color:var(--line)}
+.soft{background:var(--primary-soft);color:#285f62;border-color:#cde3e4}
+.danger-soft{background:#fff1f1;color:#8e3d43;border-color:#f0c4c7}
+.icon-btn{width:46px;height:46px;padding:0;display:inline-grid;place-items:center;background:#fff;border:1px solid var(--line);color:#345b5e}
+.icon-btn svg{width:23px;height:23px}
+.page{width:min(1180px,calc(100% - 28px));margin:0 auto;padding:24px 0 40px}
+.topbar{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px}
+.title-wrap h1{margin:0;font-size:clamp(1.55rem,3vw,2.15rem);line-height:1.3}.subtitle{color:var(--muted);margin-top:5px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.intro{padding:22px}.intro h2{margin:0 0 12px;font-size:1.15rem}.tips{background:#eef7fb;border:1px solid #d7eaf3;border-radius:14px;padding:14px 16px;margin:14px 0 20px}.tips p{margin:6px 0;line-height:1.6}
+.reading-shell{padding:18px}.reading-actions{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0 2px}
+.article-meta{color:var(--muted);font-size:.92rem;margin:6px 0 0}.paragraph-list{display:grid;gap:14px}
+.paragraph-card{position:relative;border:1px solid var(--line);border-radius:16px;padding:18px 66px 18px 18px;background:#fff;transition:background .15s ease}
+.paragraph-card.speaking{background:#edf8f7}
+.paragraph-text{font-size:var(--article-font);line-height:var(--article-line);letter-spacing:.02em;word-break:break-word;user-select:text;-webkit-user-select:text}
+.paragraph-speaker{position:absolute;right:12px;top:12px}
+.speaking-range{text-decoration-line:underline;text-decoration-style:solid;text-decoration-color:#3f9e9c;text-decoration-thickness:3px;text-underline-offset:5px}
+.strikethrough{text-decoration-line:line-through;text-decoration-thickness:2px}
+.strikethrough.speaking-range{text-decoration-line:line-through underline}
+.highlight-yellow{background:#FEF08A}.highlight-orange{background:#FED7AA}.highlight-coral{background:#FECDD3}.highlight-pink{background:#FBCFE8}.highlight-purple{background:#DDD6FE}.highlight-blue{background:#BFDBFE}.highlight-sky{background:#BAE6FD}.highlight-teal{background:#99F6E4}.highlight-green{background:#BBF7D0}.highlight-gray{background:#E5E7EB}
+.quiz-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}.quiz-article,.quiz-panel{padding:18px}.quiz-article{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+.quiz-article h2,.quiz-panel h2{margin:0 0 14px}.progress{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;color:var(--muted);font-weight:700}
+.q-title{display:flex;gap:10px;align-items:flex-start}.q-text{font-size:1.12rem;line-height:1.7;font-weight:800;flex:1}
+.option-list{display:grid;gap:10px;margin:16px 0}.option{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff;min-height:58px;cursor:pointer}.option:hover{border-color:#bcd4d6}.option.selected{background:#e9f6f6;border-color:#78afb2}.option.correct{background:var(--ok);border-color:var(--ok-b)}.option.wrong{background:var(--bad);border-color:var(--bad-b)}.option.locked{cursor:default}.option-letter{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#f1f6f7;font-weight:900;flex:none}.option-text{flex:1;line-height:1.55}.option-speech{flex:none;width:42px;height:42px;padding:0}
+.feedback{border-radius:14px;padding:14px;margin-top:12px;line-height:1.7}.feedback.ok{background:var(--ok);border:1px solid var(--ok-b)}.feedback.bad{background:var(--bad);border:1px solid var(--bad-b)}.explanation{margin-top:10px;padding-top:10px;border-top:1px dashed rgba(70,90,100,.24)}
+.quiz-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.inline-msg{min-height:24px;color:#9a5a21;font-weight:700;margin-top:8px}
+.result{padding:24px;text-align:center}.score{font-size:clamp(2rem,6vw,3.4rem);font-weight:900;color:#2f7276;margin:10px 0}.result-grid{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px}
+.review-list{display:grid;gap:14px;margin-top:18px;text-align:left}.review-item{border:1px solid var(--line);border-radius:14px;padding:15px;background:#fff}.review-item h3{margin:0 0 9px;font-size:1rem}.review-item p{margin:6px 0;line-height:1.6}
+.modal-backdrop{position:fixed;inset:0;background:rgba(30,45,55,.38);display:grid;place-items:center;padding:18px;z-index:1000}.modal{width:min(560px,100%);max-height:min(86vh,760px);overflow:auto;background:#fff;border-radius:20px;border:1px solid var(--line);box-shadow:0 18px 60px rgba(20,45,60,.22);padding:20px}.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.modal h2{margin:0}.setting-row{display:grid;grid-template-columns:150px 1fr 74px;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #edf2f5}.setting-row:last-of-type{border-bottom:0}.setting-row label{font-weight:800}.setting-value{font-variant-numeric:tabular-nums;text-align:right;color:var(--muted)}
+.select-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;font-weight:800;margin-bottom:7px}.field select{width:100%;min-height:46px;border:1px solid var(--line);border-radius:12px;padding:8px;background:#fff}.modal-note{font-size:.92rem;color:var(--muted);line-height:1.55;margin-top:12px}.hint-box{margin-top:14px;background:#f8fbfc;border:1px solid var(--line);border-radius:14px;padding:12px;line-height:1.7;font-size:.92rem}
+.fixed-reader-tools{position:sticky;top:8px;z-index:900;margin:0 0 16px;background:rgba(255,255,255,.97);border:1px solid #cfdde2;border-radius:16px;box-shadow:0 6px 22px rgba(30,55,70,.12);padding:10px 12px;backdrop-filter:blur(6px)}
+.fixed-reader-tools .tool-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.tool-label{font-weight:900;color:#315f62;white-space:nowrap}.tool-status{font-size:.9rem;color:var(--muted);margin-left:auto;min-width:150px;text-align:right}.fixed-palette{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.fixed-reader-tools .swatch{width:34px;height:34px;min-height:34px;border-radius:50%;padding:0;border:2px solid #fff;box-shadow:0 0 0 1px #cbd7dc}.fixed-reader-tools .swatch:focus-visible{outline:3px solid #4f8f93}.tool-action{min-height:40px;padding:8px 11px;background:#fff;color:#294a4c;border:1px solid #dce7ea}.tool-action:hover{background:#f0f7f7}.tool-divider{width:1px;height:30px;background:#dce7ed;margin:0 2px}
+.floating-tools{position:fixed;z-index:1200;display:flex;gap:6px;background:#fff;border:1px solid #cfdde2;border-radius:14px;padding:7px;box-shadow:0 8px 28px rgba(30,55,70,.20)}.floating-tools button{min-height:40px;padding:8px 11px;border-radius:10px;background:#fff;color:#294a4c;border:1px solid #dce7ea}.floating-tools button:hover{background:#f0f7f7}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1500;background:#263942;color:#fff;padding:10px 14px;border-radius:12px;box-shadow:var(--shadow);max-width:min(90vw,520px);text-align:center}
+.hidden{display:none!important}.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media (max-width:820px){.page{width:min(100% - 18px,760px);padding-top:14px}.topbar{align-items:flex-start}.quiz-layout{grid-template-columns:1fr}.quiz-article{position:static;max-height:none;overflow:visible}.paragraph-card{padding:16px 58px 16px 15px}.setting-row{grid-template-columns:1fr 70px}.setting-row input,.setting-row select{grid-column:1/-1}.setting-row .setting-value{grid-column:2;grid-row:1}.select-row{grid-template-columns:1fr}.modal{padding:16px}}
+@media (max-width:520px){button{padding:10px 13px}.page{width:calc(100% - 12px)}.card{border-radius:15px}.intro,.reading-shell,.quiz-article,.quiz-panel,.result{padding:14px}.paragraph-text{letter-spacing:0}.option{padding:10px}.floating-tools{max-width:calc(100vw - 12px)}.fixed-reader-tools{top:4px;padding:9px}.fixed-reader-tools .tool-row{gap:7px}.fixed-reader-tools .swatch{width:32px;height:32px;min-height:32px}.tool-status{width:100%;margin-left:0;text-align:left;min-width:0}.tool-divider{display:none}}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="topbar">
+    <div class="title-wrap">
+      <h1 id="pageTitle"></h1>
+      <div class="subtitle">互動式閱讀策略測驗</div>
+    </div>
+    <button id="settingsBtn" class="icon-btn" aria-label="開啟閱讀設定" title="閱讀設定">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94a7.8 7.8 0 0 0 .05-.94 7.8 7.8 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.3 7.3 0 0 0-1.63-.94L14.38 2.8a.5.5 0 0 0-.49-.4h-3.84a.5.5 0 0 0-.49.4l-.36 2.52a7.3 7.3 0 0 0-1.63.94L5.18 5.3a.5.5 0 0 0-.61.22L2.65 8.84a.5.5 0 0 0 .12.64l2.03 1.58a7.8 7.8 0 0 0-.05.94c0 .32.02.63.05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .61.22l2.39-.96c.5.39 1.04.7 1.63.94l.36 2.52c.04.24.24.4.49.4h3.84c.25 0 .45-.16.49-.4l.36-2.52c.59-.24 1.13-.55 1.63-.94l2.39.96a.5.5 0 0 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"/></svg>
+    </button>
+  </header>
+
+  <div id="fixedReaderTools" class="fixed-reader-tools hidden" role="toolbar" aria-label="固定閱讀工具列">
+    <div class="tool-row">
+      <span class="tool-label">🖍 重點</span>
+      <div id="fixedPalette" class="fixed-palette" aria-label="螢光筆顏色"></div>
+      <span class="tool-divider" aria-hidden="true"></span>
+      <button id="fixedStrikeBtn" class="tool-action" type="button">S̶ 刪除線</button>
+      <button id="fixedCancelHighlightBtn" class="tool-action" type="button">取消重點</button>
+      <button id="fixedCancelStrikeBtn" class="tool-action" type="button">取消刪除線</button>
+      <button id="fixedCancelAllBtn" class="tool-action" type="button">全部取消</button>
+      <span id="selectionStatus" class="tool-status">請先選取文章文字</span>
+    </div>
+  </div>
+
+  <section id="startView" class="card intro">
+    <h2>💡 使用說明</h2>
+    <div class="tips">
+      <p>點擊下方「閱讀文章」按鈕，開始逐段閱讀。</p>
+      <p>每段文字右方有朗讀按鈕，可以朗讀整個段落。</p>
+      <p>選取文章中的文字後，可用上方工具列畫重點或加刪除線；「唸讀」會出現在選取文字附近。</p>
+      <p>閱讀完成後，即可開始閱讀理解測驗。</p>
+    </div>
+    <button id="beginReadingBtn" class="primary">閱讀文章</button>
+  </section>
+
+  <section id="readingView" class="card reading-shell hidden">
+    <div id="articleMeta" class="article-meta"></div>
+    <div id="readingParagraphs" class="paragraph-list" aria-live="polite"></div>
+    <div class="reading-actions">
+      <button id="nextParagraphBtn" class="primary hidden"></button>
+      <button id="openQuizSetupBtn" class="primary hidden">開始測驗</button>
+    </div>
+  </section>
+
+  <section id="quizView" class="quiz-layout hidden">
+    <article class="card quiz-article">
+      <h2>文章</h2>
+      <div id="quizArticleMeta" class="article-meta"></div>
+      <div id="quizParagraphs" class="paragraph-list"></div>
+    </article>
+    <section class="card quiz-panel" id="quizPanel"></section>
+  </section>
+
+  <section id="resultView" class="card result hidden"></section>
+</main>
+
+<div id="settingsModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="modal">
+    <div class="modal-head"><h2 id="settingsTitle">閱讀設定</h2><button class="icon-btn" id="closeSettingsBtn" aria-label="關閉閱讀設定">✕</button></div>
+    <div class="setting-row"><label for="fontSizeInput">字體大小</label><input id="fontSizeInput" type="range" min="14" max="30" step="1"><span class="setting-value" id="fontSizeValue"></span></div>
+    <div class="setting-row"><label for="lineHeightInput">行距</label><input id="lineHeightInput" type="range" min="1.4" max="2.8" step="0.1"><span class="setting-value" id="lineHeightValue"></span></div>
+    <div class="setting-row"><label for="speechRateInput">朗讀語速</label><input id="speechRateInput" type="range" min="0.5" max="2" step="0.1"><span class="setting-value" id="speechRateValue"></span></div>
+    <div class="setting-row"><label for="waitTimeSelect">閱讀等待時間</label><select id="waitTimeSelect"><option value="0">不限制</option><option value="5">5 秒</option><option value="10">10 秒</option><option value="15">15 秒</option><option value="20">20 秒</option><option value="30">30 秒</option></select><span class="setting-value" id="waitTimeValue"></span></div>
+    <div class="hint-box"><strong>顏色使用提示（可自由選擇）</strong><br>黃色：重要資訊　綠色：原因　藍色：結果<br>粉紅色：不懂的地方　紫色：人物觀點</div>
+  </div>
+</div>
+
+<div id="quizSetupModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="quizSetupTitle">
+  <div class="modal">
+    <div class="modal-head"><h2 id="quizSetupTitle">開始測驗</h2><button class="icon-btn" id="closeQuizSetupBtn" aria-label="關閉測驗設定">✕</button></div>
+    <div class="select-row">
+      <div class="field"><label for="difficultySelect">難度</label><select id="difficultySelect"><option value="basic">基礎</option><option value="standard" selected>一般</option><option value="advanced">進階</option></select></div>
+      <div class="field"><label for="questionCountSelect">題數</label><select id="questionCountSelect"><option value="4">4 題</option><option value="6" selected>6 題</option><option value="8">8 題</option><option value="10">10 題</option></select></div>
+    </div>
+    <p class="modal-note" id="questionCountNote">本篇每種難度提供 8 題高品質題目。若選擇 10 題，系統會以可用題數為準，不重複硬湊。</p>
+    <div class="quiz-actions"><button id="startQuizBtn" class="primary">開始作答</button><button id="cancelQuizSetupBtn" class="secondary">返回文章</button></div>
+  </div>
+</div>
+
+<div id="floatingTools" class="floating-tools hidden" role="toolbar" aria-label="選取文字朗讀工具">
+  <button data-tool="speak" type="button">🔊 唸讀選取文字</button>
+</div>
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+<script>
+/* ===== 資料區：文章與題庫集中於此，方便日後更換 ===== */
+const articleData = {
+  title: "四、小丑魚和海葵",
+  author: "",
+  source: "",
+  paragraphs: [
+    "在神祕的大海中，有一大片漂亮的海葵，有的像紅寶石，有的像綠寶石，有的像一朵花，有的像一棵樹，形成一個巨大的花園城堡。小丑魚開心自在的和朋友一起在這裡遊玩。",
+    "這一天，有條黃色的大魚在遠遠的地方就看見小丑魚，心中有了一個想法。他慢慢的靠近，好聲好氣的說：「早安！這裡真熱鬧，你們在做什麼？好像很有趣，我可以參加嗎？",
+    "小丑魚笑著說：「你好！我們在玩躲貓貓，你也一起來玩吧！」",
+    "大魚輕輕擺動尾巴游了過去。沒想到他一靠近，就露出不懷好意的笑容，張開大大的嘴巴，吸了一口氣。小丑魚意識到他居心不良，趕快找地方躲起來。海葵眼看小丑魚驚慌的左右閃躲，大叫一聲：「快！躲到我這裡！」海葵等到大魚靠近時，抓準時機射出刺針。「好痛！」大魚哇哇叫，只好使出全力游出花園城堡。",
+    "海葵望著遠去的大魚說：「我的觸手雖然美麗，卻是有毒的。小丑魚是我的好朋友，誰都不能欺負他。」",
+    "小丑魚感動的說：「謝謝你！每當我遇到危險，都是你出面幫忙。」"
+  ]
+};
+
+const quizData = {
+  basic: [
+    {question:"第一段把一大片海葵形容成什麼？",options:{A:"巨大的花園城堡",B:"安靜的海底洞穴",C:"黃色的大魚群",D:"一座珊瑚山"},correctAnswer:"A",explanation:"文章第一段說，漂亮的海葵有不同的顏色和形狀，『形成一個巨大的花園城堡』。",type:"直接提取訊息"},
+    {question:"小丑魚和朋友原本在玩什麼？",options:{A:"游泳比賽",B:"躲貓貓",C:"找寶石",D:"追大魚"},correctAnswer:"B",explanation:"文章第三段中，小丑魚告訴大魚：『我們在玩躲貓貓。』",type:"重要細節"},
+    {question:"大魚一靠近後做了什麼？",options:{A:"立刻離開",B:"幫小丑魚找朋友",C:"張開大嘴吸了一口氣",D:"躲進海葵裡"},correctAnswer:"C",explanation:"文章第四段寫到，大魚靠近後露出不懷好意的笑容，『張開大大的嘴巴，吸了一口氣』。",type:"事件理解"},
+    {question:"是誰叫小丑魚『快！躲到我這裡！』？",options:{A:"小丑魚的朋友",B:"黃色大魚",C:"其他小魚",D:"海葵"},correctAnswer:"D",explanation:"文章第四段清楚寫到，海葵看到小丑魚驚慌閃躲後，大叫：『快！躲到我這裡！』",type:"人物辨識"},
+    {question:"海葵用什麼方式趕走大魚？",options:{A:"射出刺針",B:"用尾巴打他",C:"把他藏起來",D:"大聲唱歌"},correctAnswer:"A",explanation:"文章第四段提到，海葵等大魚靠近時，『抓準時機射出刺針』。",type:"重要細節"},
+    {question:"大魚為什麼游出花園城堡？",options:{A:"他玩累了",B:"他被刺得很痛",C:"小丑魚請他離開",D:"天色變暗了"},correctAnswer:"B",explanation:"文章第四段中，大魚被海葵刺到後喊『好痛！』，只好使出全力游出花園城堡。",type:"原因結果"},
+    {question:"海葵說小丑魚是他的什麼人？",options:{A:"客人",B:"敵人",C:"好朋友",D:"老師"},correctAnswer:"C",explanation:"文章第五段中，海葵說：『小丑魚是我的好朋友，誰都不能欺負他。』",type:"直接提取訊息"},
+    {question:"大魚一開始好聲好氣，後來卻想攻擊小丑魚，可以知道什麼？",options:{A:"大魚忘記怎麼玩",B:"大魚很害怕海葵",C:"大魚真的只想交朋友",D:"大魚一開始是在假裝友善"},correctAnswer:"D",explanation:"第二段大魚好聲好氣地靠近，第四段卻露出不懷好意的笑容並張開大嘴，因此可以推知他一開始在假裝友善。",type:"簡單推論"}
+  ],
+  standard: [
+    {question:"從大魚靠近前後的行為看來，他接近小丑魚最可能有什麼目的？",options:{A:"想趁機攻擊小丑魚",B:"想學小丑魚玩躲貓貓",C:"想保護海葵",D:"想找自己的朋友"},correctAnswer:"A",explanation:"第二段的大魚表面友善，第四段靠近後卻張開大嘴吸氣，小丑魚也察覺他『居心不良』，可知他接近小丑魚另有攻擊目的。",type:"推論理解"},
+    {question:"文中的『居心不良』最接近下列哪一個意思？",options:{A:"心情不好",B:"心裡有不好的打算",C:"不知道要去哪裡",D:"想法很多但沒有行動"},correctAnswer:"B",explanation:"第四段中，小丑魚看到大魚露出不懷好意的笑容、張開大嘴後，才判斷他『居心不良』，意思是心裡有不好的打算。",type:"詞語理解"},
+    {question:"下列哪一個事件順序最符合文章？",options:{A:"海葵射刺針→大魚打招呼→小丑魚躲起來",B:"小丑魚道謝→大魚靠近→海葵射刺針",C:"大魚假裝友善→小丑魚察覺危險→海葵出手幫忙",D:"海葵說明觸手有毒→小丑魚邀大魚玩→大魚離開"},correctAnswer:"C",explanation:"文章先寫大魚好聲好氣地靠近，再寫小丑魚察覺危險，接著海葵叫小丑魚躲過來並射出刺針。",type:"先後順序"},
+    {question:"海葵射出刺針後，造成什麼結果？",options:{A:"小丑魚離開花園城堡",B:"海葵自己受傷",C:"大魚更靠近小丑魚",D:"大魚喊痛並游走"},correctAnswer:"D",explanation:"第四段寫到海葵射出刺針後，大魚喊『好痛！』，最後使出全力游出花園城堡。",type:"原因與結果"},
+    {question:"第一段的『花園城堡』主要指的是什麼景象？",options:{A:"許多漂亮海葵形成的地方",B:"小丑魚蓋的房子",C:"大魚住的城堡",D:"海底的寶石商店"},correctAnswer:"A",explanation:"第一段先描寫海葵像紅寶石、綠寶石、花和樹，接著說它們『形成一個巨大的花園城堡』，所以是指大片漂亮海葵形成的景象。",type:"句意理解"},
+    {question:"故事最後，小丑魚最主要的心情是什麼？",options:{A:"生氣",B:"感動與感謝",C:"害怕大海",D:"失望"},correctAnswer:"B",explanation:"最後一段直接寫『小丑魚感動的說：「謝謝你！」』，可知他的主要心情是感動與感謝。",type:"人物情緒"},
+    {question:"海葵說『誰都不能欺負他』，最能表現海葵的哪一種態度？",options:{A:"想炫耀自己漂亮",B:"害怕所有大魚",C:"重視並保護朋友",D:"不想讓小丑魚玩耍"},correctAnswer:"C",explanation:"第五段海葵先說小丑魚是自己的好朋友，再說誰都不能欺負他，表現出保護朋友的態度。",type:"人物觀點"},
+    {question:"下列哪一項最能概括這篇文章的主要內容？",options:{A:"小丑魚每天都和朋友玩躲貓貓",B:"黃色大魚教大家如何游泳",C:"海葵介紹自己的外表和顏色",D:"大魚想傷害小丑魚，海葵用刺針保護朋友"},correctAnswer:"D",explanation:"全文的主要事件是大魚假裝友善接近小丑魚，後來想攻擊他，而海葵用有毒的刺針保護小丑魚並趕走大魚。",type:"文章主旨"}
+  ],
+  advanced: [
+    {question:"作者先寫大魚『好聲好氣』，再寫他『露出不懷好意的笑容』，這樣安排最主要的作用是什麼？",options:{A:"形成前後反差，突顯大魚假裝友善",B:"說明大魚說話聲音很小",C:"證明大魚後來改變了心意",D:"表示小丑魚沒有聽懂大魚的話"},correctAnswer:"A",explanation:"第二段的大魚表面上好聲好氣，第四段卻露出不懷好意的笑容並張開大嘴，前後反差讓讀者看出他的友善只是表面。",type:"寫作手法"},
+    {question:"第一段描寫海葵像寶石、花和樹，對後文最主要有什麼作用？",options:{A:"說明海葵只會裝飾環境",B:"先建立美麗、安全的場景，再襯托後來的危險",C:"證明大魚也喜歡寶石",D:"告訴讀者小丑魚不喜歡海葵"},correctAnswer:"B",explanation:"第一段先營造美麗、自在的花園城堡與遊玩情境，之後突然出現大魚的威脅，使危險場面更明顯。",type:"段落功能"},
+    {question:"小丑魚說『每當我遇到危險，都是你出面幫忙』，可以合理推知什麼？",options:{A:"小丑魚只遇過這一次危險",B:"海葵第一次看到小丑魚",C:"海葵過去可能也曾幫助過小丑魚",D:"小丑魚平常都在幫海葵"},correctAnswer:"C",explanation:"『每當』表示不只一次；小丑魚又說都是海葵出面幫忙，因此可推知海葵過去可能也曾在危險時幫助他。",type:"深層推論"},
+    {question:"故事中的主要衝突最後是怎麼解決的？",options:{A:"小丑魚自己把大魚趕走",B:"大魚主動加入遊戲後離開",C:"所有小魚一起把大魚包圍",D:"海葵讓小丑魚躲避，並用刺針逼退大魚"},correctAnswer:"D",explanation:"第四段中，海葵先叫小丑魚躲到自己這裡，再抓準時機射出刺針，使大魚因疼痛而游走，解決了危機。",type:"跨段統整"},
+    {question:"海葵說『我的觸手雖然美麗，卻是有毒的』，這句話在故事中最重要的意義是什麼？",options:{A:"說明海葵的外表與保護能力同時存在",B:"表示海葵不希望任何人靠近",C:"說明海葵比小丑魚游得快",D:"表示海葵其實不喜歡自己的觸手"},correctAnswer:"A",explanation:"前文先描寫海葵美麗，後文海葵又用有毒的刺針保護小丑魚，這句話把『美麗』與『能防禦』兩個特點連在一起。",type:"句意統整"},
+    {question:"從海葵與小丑魚的對話來看，兩者的關係最適合怎麼描述？",options:{A:"互不認識，只是剛好遇到",B:"彼此信任，海葵會在危險時保護小丑魚",C:"彼此競爭誰比較漂亮",D:"小丑魚害怕海葵，不敢靠近"},correctAnswer:"B",explanation:"海葵稱小丑魚為好朋友並保護他，小丑魚也說每當遇到危險都是海葵出面幫忙，顯示兩者之間有信任與長期幫助。",type:"人物關係"},
+    {question:"若刪去『海葵的觸手雖然美麗，卻是有毒的』這項資訊，讀者最難理解哪件事？",options:{A:"小丑魚為什麼喜歡玩躲貓貓",B:"大魚為什麼是黃色的",C:"海葵為什麼能讓大魚痛得逃走",D:"花園城堡為什麼很漂亮"},correctAnswer:"C",explanation:"大魚被海葵的刺針刺到後喊痛並逃走；海葵說自己的觸手有毒，能補充說明牠具有防禦能力。",type:"資訊作用"},
+    {question:"下列哪一項最符合文章由前到後的發展？",options:{A:"遇到危險→開始遊戲→大魚道歉→離開",B:"朋友爭吵→海葵受傷→小丑魚逃走→和好",C:"介紹大魚→尋找寶石→比賽游泳→回家",D:"自在遊玩→危險出現→朋友相救→感謝"},correctAnswer:"D",explanation:"第一段是小丑魚自在遊玩，接著大魚帶來危險，之後海葵出手相救，最後小丑魚表達感動與感謝。",type:"文章結構"}
+  ]
+};
+
+/* ===== 程式區 ===== */
+const HIGHLIGHTS = [
+  ["yellow","#FEF08A","黃色"],["orange","#FED7AA","橘色"],["coral","#FECDD3","桃紅色"],["pink","#FBCFE8","粉紅色"],["purple","#DDD6FE","紫色"],
+  ["blue","#BFDBFE","藍色"],["sky","#BAE6FD","天藍色"],["teal","#99F6E4","青綠色"],["green","#BBF7D0","綠色"],["gray","#E5E7EB","灰色"]
+];
+const state = {
+  revealed:0, timer:null, timerRemaining:0,
+  settings:{fontSize:18,lineHeight:1.8,speechRate:1.0,waitTime:10},
+  marks:[], speakingParagraph:null, speakingRange:null, selection:null,
+  difficulty:"standard", requestedCount:6, activeQuestions:[], current:0, score:0,
+  answers:[], wrongQuestions:[], submitted:false, selectedAnswer:null, practiceMode:false
+};
+
+const $ = id => document.getElementById(id);
+const speakerSvg = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3Zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12Zm-2.5-8.7v2.06A7 7 0 0 1 18.5 12 7 7 0 0 1 14 18.64v2.06A9 9 0 0 0 20.5 12 9 9 0 0 0 14 3.3Z"/></svg>`;
+
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
+function initMarks(){state.marks=articleData.paragraphs.map(t=>({highlight:Array(t.length).fill(null),strike:Array(t.length).fill(false)}));}
+function metadataText(){return [articleData.author&&`作者：${articleData.author}`,articleData.source&&`來源：${articleData.source}`].filter(Boolean).join("　");}
+function showToast(msg){const t=$("toast");t.textContent=msg;t.classList.remove("hidden");clearTimeout(showToast._timer);showToast._timer=setTimeout(()=>t.classList.add("hidden"),2200)}
+
+function renderMarkedText(index){
+  const text=articleData.paragraphs[index], mark=state.marks[index];
+  const speaking=state.speakingRange && state.speakingRange.index===index ? state.speakingRange : null;
+  let out="", start=0;
+  const keyAt=i=>{
+    const h=mark.highlight[i]||""; const s=mark.strike[i]?"1":"0"; const sp=speaking&&i>=speaking.start&&i<speaking.end?"1":"0";
+    return `${h}|${s}|${sp}`;
+  };
+  for(let i=1;i<=text.length;i++){
+    const changed=i===text.length || keyAt(i)!==keyAt(start);
+    if(changed){
+      const [h,s,sp]=keyAt(start).split("|"); const classes=[];
+      if(h)classes.push(`highlight-${h}`); if(s==="1")classes.push("strikethrough"); if(sp==="1")classes.push("speaking-range");
+      const chunk=escapeHtml(text.slice(start,i)); out+=classes.length?`<span class="${classes.join(" ")}">${chunk}</span>`:chunk; start=i;
+    }
+  }
+  return out;
+}
+function paragraphHtml(index){
+  return `<div class="paragraph-card ${state.speakingParagraph===index?"speaking":""}" data-card-index="${index}"><div class="paragraph-text" data-paragraph-index="${index}">${renderMarkedText(index)}</div><button class="icon-btn paragraph-speaker" data-speak-paragraph="${index}" aria-label="朗讀第 ${index+1} 段" title="朗讀本段">${speakerSvg}</button></div>`;
+}
+function renderReadingParagraphs(){
+  const c=$("readingParagraphs"); c.innerHTML=Array.from({length:state.revealed},(_,i)=>paragraphHtml(i)).join("");
+}
+function renderQuizParagraphs(){
+  $("quizParagraphs").innerHTML=articleData.paragraphs.map((_,i)=>paragraphHtml(i)).join("");
+}
+function rerenderArticleViews(){
+  if(!$("readingView").classList.contains("hidden")) renderReadingParagraphs();
+  if(!$("quizView").classList.contains("hidden")) renderQuizParagraphs();
+}
+
+function startReading(){
+  $("startView").classList.add("hidden"); $("fixedReaderTools").classList.remove("hidden"); $("readingView").classList.remove("hidden");
+  state.revealed=1; renderReadingParagraphs(); updateReadingControl();
+}
+function clearCountdown(){if(state.timer){clearInterval(state.timer);state.timer=null}}
+function updateReadingControl(){
+  clearCountdown(); const next=$("nextParagraphBtn"), start=$("openQuizSetupBtn");
+  if(state.revealed>=articleData.paragraphs.length){next.classList.add("hidden");start.classList.remove("hidden");return}
+  start.classList.add("hidden"); next.classList.remove("hidden");
+  if(state.settings.waitTime===0){next.disabled=false;next.textContent="顯示下一段";return}
+  state.timerRemaining=state.settings.waitTime; next.disabled=true; next.textContent=`請稍候（${state.timerRemaining}）`;
+  state.timer=setInterval(()=>{state.timerRemaining--; if(state.timerRemaining<=0){clearCountdown();next.disabled=false;next.textContent="顯示下一段"}else next.textContent=`請稍候（${state.timerRemaining}）`;},1000);
+}
+function revealNext(){if(state.revealed>=articleData.paragraphs.length)return;state.revealed++;renderReadingParagraphs();updateReadingControl();setTimeout(()=>{const el=document.querySelector(`#readingParagraphs [data-card-index="${state.revealed-1}"]`);el?.scrollIntoView({behavior:"smooth",block:"center"})},20)}
+
+function cancelSpeech(){
+  if("speechSynthesis" in window) window.speechSynthesis.cancel();
+  state.speakingParagraph=null; state.speakingRange=null; rerenderArticleViews();
+}
+function speakText(text,onEnd){
+  cancelSpeech();
+  if(!("speechSynthesis" in window)){showToast("此瀏覽器不支援朗讀功能。");return}
+  const u=new SpeechSynthesisUtterance(text);u.lang="zh-TW";u.rate=state.settings.speechRate;
+  u.onend=()=>{onEnd?.();};u.onerror=()=>{onEnd?.();};window.speechSynthesis.speak(u);
+}
+function speakParagraph(index){
+  cancelSpeech(); state.speakingParagraph=index; rerenderArticleViews();
+  if(!("speechSynthesis" in window)){showToast("此瀏覽器不支援朗讀功能。");state.speakingParagraph=null;rerenderArticleViews();return}
+  const u=new SpeechSynthesisUtterance(articleData.paragraphs[index]);u.lang="zh-TW";u.rate=state.settings.speechRate;
+  const done=()=>{state.speakingParagraph=null;rerenderArticleViews()};u.onend=done;u.onerror=done;window.speechSynthesis.speak(u);
+}
+function speakSelection(){
+  const sel=state.selection;if(!sel)return;cancelSpeech();state.speakingRange={index:sel.index,start:sel.start,end:sel.end};rerenderArticleViews();
+  if(!("speechSynthesis" in window)){showToast("此瀏覽器不支援朗讀功能。");state.speakingRange=null;rerenderArticleViews();return}
+  const u=new SpeechSynthesisUtterance(sel.text);u.lang="zh-TW";u.rate=state.settings.speechRate;const done=()=>{state.speakingRange=null;rerenderArticleViews()};u.onend=done;u.onerror=done;window.speechSynthesis.speak(u);
+}
+
+function getParagraphEl(node){return (node?.nodeType===1?node:node?.parentElement)?.closest?.(".paragraph-text")||null}
+function captureSelection(){
+  const s=window.getSelection();if(!s||s.rangeCount===0||s.isCollapsed){hideTools();return}
+  const r=s.getRangeAt(0), startP=getParagraphEl(r.startContainer), endP=getParagraphEl(r.endContainer);
+  if(!startP||!endP)return;
+  if(startP!==endP){showToast("請一次選取同一段中的文字。");hideTools();return}
+  const index=Number(startP.dataset.paragraphIndex); const pre=document.createRange();pre.selectNodeContents(startP);pre.setEnd(r.startContainer,r.startOffset);const start=pre.toString().length;
+  const upto=document.createRange();upto.selectNodeContents(startP);upto.setEnd(r.endContainer,r.endOffset);const end=upto.toString().length;
+  if(end<=start){hideTools();return}
+  state.selection={index,start,end,text:articleData.paragraphs[index].slice(start,end),rect:r.getBoundingClientRect()};updateSelectionStatus();positionTools(state.selection.rect);
+}
+function positionTools(rect){
+  const t=$("floatingTools");t.classList.remove("hidden");
+  requestAnimationFrame(()=>{
+    const w=t.offsetWidth,h=t.offsetHeight,margin=8; let left=rect.left+rect.width/2-w/2;left=Math.max(margin,Math.min(left,innerWidth-w-margin));
+    let top=rect.top-h-10;if(top<margin)top=rect.bottom+10;top=Math.max(margin,Math.min(top,innerHeight-h-margin));t.style.left=`${left}px`;t.style.top=`${top}px`;
+  });
+}
+function hideTools(){$("floatingTools").classList.add("hidden")}
+function updateSelectionStatus(){
+  const el=$("selectionStatus"); if(!el)return;
+  if(!state.selection){el.textContent="請先選取文章文字";return}
+  const text=state.selection.text.replace(/\s+/g," ").trim();
+  el.textContent=text?`已選取：${text.length>18?text.slice(0,18)+"…":text}`:"請先選取文章文字";
+}
+function requireSelection(){if(state.selection)return true;showToast("請先選取文章中的文字。 ");return false}
+function finishMarkAction(){state.speakingRange=null;rerenderArticleViews();hideTools();window.getSelection()?.removeAllRanges();updateSelectionStatus()}
+function applyHighlight(color){if(!requireSelection())return;const s=state.selection;for(let i=s.start;i<s.end;i++)state.marks[s.index].highlight[i]=color;finishMarkAction()}
+function toggleStrike(){if(!requireSelection())return;const s=state.selection;const all=state.marks[s.index].strike.slice(s.start,s.end).every(Boolean);for(let i=s.start;i<s.end;i++)state.marks[s.index].strike[i]=!all;finishMarkAction()}
+function cancelMark(kind){if(!requireSelection())return;const s=state.selection;for(let i=s.start;i<s.end;i++){if(kind==="highlight"||kind==="all")state.marks[s.index].highlight[i]=null;if(kind==="strike"||kind==="all")state.marks[s.index].strike[i]=false}finishMarkAction()}
+
+function openSettings(){syncSettingsUI();$("settingsModal").classList.remove("hidden")}
+function closeSettings(){$("settingsModal").classList.add("hidden")}
+function syncSettingsUI(){
+  $("fontSizeInput").value=state.settings.fontSize;$("lineHeightInput").value=state.settings.lineHeight;$("speechRateInput").value=state.settings.speechRate;$("waitTimeSelect").value=state.settings.waitTime;
+  $("fontSizeValue").textContent=`${state.settings.fontSize}px`;$("lineHeightValue").textContent=state.settings.lineHeight.toFixed(1);$("speechRateValue").textContent=`${state.settings.speechRate.toFixed(1)}x`;$("waitTimeValue").textContent=state.settings.waitTime?`${state.settings.waitTime} 秒`:"不限制";
+}
+function applySettings(){document.documentElement.style.setProperty("--article-font",`${state.settings.fontSize}px`);document.documentElement.style.setProperty("--article-line",state.settings.lineHeight);syncSettingsUI()}
+
+function openQuizSetup(){$("quizSetupModal").classList.remove("hidden");$("difficultySelect").value=state.difficulty;$("questionCountSelect").value=String(state.requestedCount)}
+function closeQuizSetup(){$("quizSetupModal").classList.add("hidden")}
+function startQuiz(){
+  cancelSpeech();clearCountdown();state.difficulty=$("difficultySelect").value;state.requestedCount=Number($("questionCountSelect").value);const pool=quizData[state.difficulty];const n=Math.min(state.requestedCount,pool.length);
+  if(n<state.requestedCount)showToast(`本篇此難度提供 ${pool.length} 題，將以 ${pool.length} 題進行。`);
+  state.activeQuestions=pool.slice(0,n).map(q=>({...q,options:{...q.options}}));state.current=0;state.score=0;state.answers=[];state.wrongQuestions=[];state.submitted=false;state.selectedAnswer=null;state.practiceMode=false;
+  closeQuizSetup();$("fixedReaderTools").classList.remove("hidden");$("readingView").classList.add("hidden");$("resultView").classList.add("hidden");$("quizView").classList.remove("hidden");renderQuizParagraphs();renderQuestion();window.scrollTo({top:0,behavior:"smooth"});
+}
+function optionSpeechButton(letter,text){return `<button class="icon-btn option-speech" data-speak-option="${letter}" data-text="${encodeURIComponent(text)}" aria-label="朗讀選項 ${letter}" title="朗讀選項">${speakerSvg}</button>`}
+function renderQuestion(){
+  const q=state.activeQuestions[state.current], total=state.activeQuestions.length;if(!q){showResults();return}
+  const opts=Object.entries(q.options).map(([k,v])=>{
+    let cls="option";if(state.selectedAnswer===k)cls+=" selected";if(state.submitted){cls+=" locked";if(k===q.correctAnswer)cls+=" correct";else if(k===state.selectedAnswer)cls+=" wrong"}
+    return `<div class="${cls}" data-option="${k}" role="button" tabindex="0" aria-label="選項 ${k}：${escapeHtml(v)}"><span class="option-letter">${k}</span><span class="option-text">${escapeHtml(v)}</span>${optionSpeechButton(k,v)}</div>`;
+  }).join("");
+  let feedback="";if(state.submitted){const ok=state.selectedAnswer===q.correctAnswer;feedback=`<div class="feedback ${ok?"ok":"bad"}"><strong>${ok?"答案正確！":"答案錯誤。"}</strong><div class="explanation"><div style="display:flex;gap:8px;align-items:flex-start"><div style="flex:1"><strong>詳解：</strong>${escapeHtml(q.explanation)}</div><button class="icon-btn" data-speak-explanation aria-label="朗讀詳解" title="朗讀詳解">${speakerSvg}</button></div></div></div>`}
+  $("quizPanel").innerHTML=`<div class="progress"><span>第 ${state.current+1} / ${total} 題</span><span>${state.practiceMode?"錯題練習":difficultyLabel(state.difficulty)}</span></div><div class="q-title"><div class="q-text">${escapeHtml(q.question)}</div><button class="icon-btn" data-speak-question aria-label="朗讀題目" title="朗讀題目">${speakerSvg}</button></div><div class="option-list">${opts}</div><div class="inline-msg" id="answerMsg"></div>${feedback}<div class="quiz-actions">${state.submitted?`<button class="primary" id="nextQuestionBtn">${state.current===total-1?"查看結果":"下一題"}</button>`:`<button class="primary" id="submitAnswerBtn">提交答案</button>`}</div>`;
+}
+function difficultyLabel(v){return v==="basic"?"基礎":v==="advanced"?"進階":"一般"}
+function selectAnswer(letter){if(state.submitted)return;state.selectedAnswer=letter;renderQuestion()}
+function submitAnswer(){
+  if(state.submitted)return;if(!state.selectedAnswer){$("answerMsg").textContent="請選擇一個答案！";return}
+  state.submitted=true;const q=state.activeQuestions[state.current],correct=state.selectedAnswer===q.correctAnswer;if(correct)state.score++;
+  state.answers.push({question:q,selected:state.selectedAnswer,correct});if(!correct)state.wrongQuestions.push({question:q,selected:state.selectedAnswer});renderQuestion();
+}
+function nextQuestion(){if(!state.submitted)return;if(state.current>=state.activeQuestions.length-1){showResults();return}state.current++;state.selectedAnswer=null;state.submitted=false;renderQuestion();$("quizPanel").scrollIntoView({behavior:"smooth",block:"start"})}
+function showResults(){
+  cancelSpeech();$("quizView").classList.add("hidden");$("fixedReaderTools").classList.add("hidden");$("resultView").classList.remove("hidden");const total=state.activeQuestions.length,pct=total?Math.round(state.score/total*100):0;
+  const wrongCount=state.wrongQuestions.length;$("resultView").innerHTML=`<h2>${state.practiceMode?"錯題練習完成！":"測驗完成！"}</h2><div class="score">${state.score} / ${total}</div><p><strong>正確率：${pct}%</strong></p><div class="result-grid"><button class="secondary" id="reviewWrongBtn">查看錯題</button>${wrongCount?`<button class="soft" id="practiceWrongBtn">只練習錯題</button>`:""}<button class="primary" id="restartBtn">重新測驗</button></div><div id="reviewArea"></div>`;window.scrollTo({top:0,behavior:"smooth"});
+}
+function reviewWrong(){
+  const area=$("reviewArea");if(!state.wrongQuestions.length){area.innerHTML=`<div class="feedback ok" style="margin-top:18px">太棒了，本次沒有錯題！</div>`;return}
+  area.innerHTML=`<div class="review-list">${state.wrongQuestions.map((w,i)=>`<div class="review-item"><h3>錯題 ${i+1}：${escapeHtml(w.question.question)}</h3><p><strong>我的答案：</strong>${w.selected}. ${escapeHtml(w.question.options[w.selected])}</p><p><strong>正確答案：</strong>${w.question.correctAnswer}. ${escapeHtml(w.question.options[w.question.correctAnswer])}</p><p><strong>詳解：</strong>${escapeHtml(w.question.explanation)}</p></div>`).join("")}</div>`;
+}
+function practiceWrong(){
+  if(!state.wrongQuestions.length){reviewWrong();return}const copy=state.wrongQuestions.map(w=>({...w.question,options:{...w.question.options}}));state.activeQuestions=copy;state.current=0;state.score=0;state.answers=[];state.wrongQuestions=[];state.submitted=false;state.selectedAnswer=null;state.practiceMode=true;$("resultView").classList.add("hidden");$("fixedReaderTools").classList.remove("hidden");$("quizView").classList.remove("hidden");renderQuizParagraphs();renderQuestion();window.scrollTo({top:0,behavior:"smooth"});
+}
+function restartAll(){
+  cancelSpeech();clearCountdown();initMarks();state.revealed=0;state.activeQuestions=[];state.current=0;state.score=0;state.answers=[];state.wrongQuestions=[];state.submitted=false;state.selectedAnswer=null;state.practiceMode=false;state.selection=null;hideTools();$("fixedReaderTools").classList.add("hidden");updateSelectionStatus();$("resultView").classList.add("hidden");$("quizView").classList.add("hidden");$("readingView").classList.add("hidden");$("startView").classList.remove("hidden");window.getSelection()?.removeAllRanges();window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function buildPalette(){
+  $("fixedPalette").innerHTML=HIGHLIGHTS.map(([key,color,label])=>`<button class="swatch" type="button" style="background:${color}" data-fixed-color="${key}" title="${label}" aria-label="使用${label}螢光筆"></button>`).join("");
+}
+function init(){
+  initMarks();buildPalette();$("pageTitle").textContent=articleData.title;$("articleMeta").textContent=metadataText();$("quizArticleMeta").textContent=metadataText();applySettings();
+  $("beginReadingBtn").addEventListener("click",startReading);$("nextParagraphBtn").addEventListener("click",revealNext);$("openQuizSetupBtn").addEventListener("click",openQuizSetup);
+  $("settingsBtn").addEventListener("click",openSettings);$("closeSettingsBtn").addEventListener("click",closeSettings);$("settingsModal").addEventListener("click",e=>{if(e.target===$("settingsModal"))closeSettings()});
+  $("fontSizeInput").addEventListener("input",e=>{state.settings.fontSize=Number(e.target.value);applySettings()});$("lineHeightInput").addEventListener("input",e=>{state.settings.lineHeight=Number(e.target.value);applySettings()});$("speechRateInput").addEventListener("input",e=>{state.settings.speechRate=Number(e.target.value);syncSettingsUI()});$("waitTimeSelect").addEventListener("change",e=>{state.settings.waitTime=Number(e.target.value);syncSettingsUI();if(!$("readingView").classList.contains("hidden")&&state.revealed>0&&state.revealed<articleData.paragraphs.length)updateReadingControl()});
+  $("closeQuizSetupBtn").addEventListener("click",closeQuizSetup);$("cancelQuizSetupBtn").addEventListener("click",closeQuizSetup);$("quizSetupModal").addEventListener("click",e=>{if(e.target===$("quizSetupModal"))closeQuizSetup()});$("startQuizBtn").addEventListener("click",startQuiz);$("difficultySelect").addEventListener("change",e=>state.difficulty=e.target.value);$("questionCountSelect").addEventListener("change",e=>state.requestedCount=Number(e.target.value));
+  document.addEventListener("click",e=>{
+    const sp=e.target.closest("[data-speak-paragraph]");if(sp){e.preventDefault();e.stopPropagation();speakParagraph(Number(sp.dataset.speakParagraph));return}
+    const opt=e.target.closest(".option");const os=e.target.closest("[data-speak-option]");if(os){e.preventDefault();e.stopPropagation();speakText(decodeURIComponent(os.dataset.text));return}
+    if(opt){selectAnswer(opt.dataset.option);return}
+    if(e.target.closest("[data-speak-question]")){speakText(state.activeQuestions[state.current].question);return}
+    if(e.target.closest("[data-speak-explanation]")){speakText(state.activeQuestions[state.current].explanation);return}
+    if(e.target.id==="submitAnswerBtn"){submitAnswer();return}if(e.target.id==="nextQuestionBtn"){nextQuestion();return}if(e.target.id==="reviewWrongBtn"){reviewWrong();return}if(e.target.id==="practiceWrongBtn"){practiceWrong();return}if(e.target.id==="restartBtn"){restartAll();return}
+    const tool=e.target.closest("#floatingTools button");if(tool){e.preventDefault();if(tool.dataset.tool==="speak"){speakSelection();hideTools()}return}
+    const sw=e.target.closest("[data-fixed-color]");if(sw){e.preventDefault();applyHighlight(sw.dataset.fixedColor);return}
+    if(e.target.closest("#fixedStrikeBtn")){e.preventDefault();toggleStrike();return}
+    if(e.target.closest("#fixedCancelHighlightBtn")){e.preventDefault();cancelMark("highlight");return}
+    if(e.target.closest("#fixedCancelStrikeBtn")){e.preventDefault();cancelMark("strike");return}
+    if(e.target.closest("#fixedCancelAllBtn")){e.preventDefault();cancelMark("all");return}
+    if(!e.target.closest("#floatingTools")&&!e.target.closest("#fixedReaderTools")&&!getParagraphEl(e.target))hideTools();
+  });
+  document.addEventListener("keydown",e=>{if(e.target.closest?.("[data-speak-option]"))return;const opt=e.target.matches?.(".option")?e.target:null;if(opt&&(e.key==="Enter"||e.key===" ")){e.preventDefault();selectAnswer(opt.dataset.option)}if(e.key==="Escape"){closeSettings();closeQuizSetup();hideTools()}});
+  document.addEventListener("mouseup",()=>setTimeout(captureSelection,0));document.addEventListener("touchend",()=>setTimeout(captureSelection,80),{passive:true});window.addEventListener("resize",()=>{if(!$("floatingTools").classList.contains("hidden")&&state.selection)positionTools(state.selection.rect)});window.addEventListener("beforeunload",()=>{"speechSynthesis" in window&&window.speechSynthesis.cancel()});
+}
+init();
+</script>
+</body>
+</html>
