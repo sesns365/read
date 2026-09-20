@@ -1,9 +1,81 @@
+貼上的 Markdown (1).md
+檔案
+04_國小國語3上課文word檔_第04課_小丑魚和海葵.doc
+文件
+
+可以，我已直接做成「老師自訂課文＋本機儲存版」。
+
+這一版新增：
+
+✏️ 老師課文管理：可自行貼上新課文、標題、作者、來源
+📚 可在同一個 HTML 儲存多篇課文
+🖍 10 色螢光筆重點會依課文分開保存
+S̶ 刪除線也會保存
+⚙️ 字體大小、行距、語速、閱讀等待時間會保存
+📖 閱讀進度也會保存
+關掉網頁後再次開啟，會嘗試恢復上次內容
+📤 匯出備份：可把整篇課文＋重點標記存成 JSON
+📥 匯入備份：換電腦時可把課文與重點一起帶過去
+原本「小丑魚和海葵」仍保留，不會被老師自訂課文覆蓋
+
+另外我有特別處理一件重要的事：老師更換成新課文後，不會把「小丑魚和海葵」的舊題目錯誤套到新文章上。 因為目前是完全離線 HTML，新課文不會自行呼叫 AI 產生題目；但閱讀、朗讀、重點、刪除線與本機保存都能直接使用。
+
+下載「老師自訂課文＋本機儲存版」HTML
+
+我也保留了匯出備份功能，因為瀏覽器本機資料若被清除可能消失；重要課文可以直接備份成檔案，這樣最安全。
+
+互動式閱讀策略測驗_老師自訂課文_本機儲存版.html
+HTML
+匯出備份是匯出什麼?
+內建改為預設，是可以刪除
+
+
+「匯出備份」目前是匯出目前正在使用的這一篇課文專案，不是整個 HTML，也不是一次匯出所有課文。
+
+備份會包含：課文標題、作者、來源、全文與段落、該課文題庫（如果有）、10 色螢光筆重點、刪除線、字體／行距／語速／閱讀等待時間，以及目前閱讀到哪一段。不包含學生此次測驗的作答紀錄與分數。
+
+我也已依你的需求修改：
+
+「內建」改名為「預設」
+〈小丑魚和海葵〉是預設範例
+✅ 預設課文現在可以刪除
+✅ 刪除後重新開啟不會自動復活
+✅ 全部課文刪除後會呈現空白狀態，老師可自行新增
+「匯出備份」按鈕改成更清楚的「匯出目前課文備份」
+
+下載更新版：老師自訂課文＋本機儲存版
+
+互動式閱讀策略測驗_老師自訂課文_本機儲存版.html
+HTML
+阿可是閱讀後是否會有閱讀測驗，這樣我也希望可以老師自訂閱讀測驗，
+
+可以，已升級完成。
+
+現在每一篇課文都能由老師自行設定閱讀測驗，包括：
+
+自訂「基礎／一般／進階」三種難度
+自訂題目
+自訂 A、B、C、D 四個選項
+指定正確答案
+自訂題型名稱
+自訂詳解
+新增／刪除題目
+每篇課文的題庫會獨立儲存在本機
+課文、題庫、螢光筆重點、刪除線都綁在同一篇課文
+閱讀完成後，有題庫就顯示「開始測驗」
+尚未建立題庫時，會顯示「設定閱讀測驗」
+原本〈小丑魚和海葵〉的內建題庫也可以直接修改；儲存後會成為老師自己的版本
+
+我也檢查過 HTML 結構與 JavaScript 語法。
+
+下載更新版：老師自訂課文＋自訂閱讀測驗＋本機儲存
+
 <!DOCTYPE html>
 <html lang="zh-Hant-TW">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>小丑魚和海葵｜互動式閱讀策略測驗</title>
+<title>老師自訂課文與測驗｜互動式閱讀策略測驗</title>
 <style>
 :root{
   --bg:#f3f7fa; --card:#ffffff; --ink:#24323d; --muted:#667784; --line:#dce7ed;
@@ -55,6 +127,50 @@ button:disabled{cursor:not-allowed;opacity:.55}
 .hidden{display:none!important}.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media (max-width:820px){.page{width:min(100% - 18px,760px);padding-top:14px}.topbar{align-items:flex-start}.quiz-layout{grid-template-columns:1fr}.quiz-article{position:static;max-height:none;overflow:visible}.paragraph-card{padding:16px 58px 16px 15px}.setting-row{grid-template-columns:1fr 70px}.setting-row input,.setting-row select{grid-column:1/-1}.setting-row .setting-value{grid-column:2;grid-row:1}.select-row{grid-template-columns:1fr}.modal{padding:16px}}
 @media (max-width:520px){button{padding:10px 13px}.page{width:calc(100% - 12px)}.card{border-radius:15px}.intro,.reading-shell,.quiz-article,.quiz-panel,.result{padding:14px}.paragraph-text{letter-spacing:0}.option{padding:10px}.floating-tools{max-width:calc(100vw - 12px)}.fixed-reader-tools{top:4px;padding:9px}.fixed-reader-tools .tool-row{gap:7px}.fixed-reader-tools .swatch{width:32px;height:32px;min-height:32px}.tool-status{width:100%;margin-left:0;text-align:left;min-width:0}.tool-divider{display:none}}
+
+.teacher-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.teacher-btn{background:#fff;color:#315d61;border:1px solid var(--line)}
+.teacher-btn:hover{background:#f4fbfb}
+.teacher-modal{width:min(780px,calc(100vw - 24px));max-height:90vh;overflow:auto}
+.teacher-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.teacher-grid .full{grid-column:1/-1}
+.teacher-field{display:grid;gap:6px}
+.teacher-field label{font-weight:700}
+.teacher-field input,.teacher-field textarea,.teacher-field select{
+  width:100%;border:1px solid #cad9e0;border-radius:10px;padding:10px 12px;background:#fff;color:var(--ink)
+}
+.teacher-field textarea{min-height:230px;resize:vertical;line-height:1.7}
+.project-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:end}
+.project-note{font-size:.92rem;color:var(--muted);line-height:1.55}
+.save-status{display:inline-flex;align-items:center;gap:6px;font-size:.9rem;color:#45666a;background:#eef7f7;border:1px solid #d2e7e7;border-radius:999px;padding:6px 10px}
+.teacher-footer{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
+.teacher-danger{background:#fff5f5;color:#9a454b;border:1px solid #efcfd2}
+.quiz-editor{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.quiz-editor-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.quiz-editor-head h3{margin:0;font-size:1.08rem}
+.quiz-editor-tools{display:flex;gap:8px;align-items:end;flex-wrap:wrap}
+.quiz-editor-tools .teacher-field{min-width:130px}
+.quiz-editor-count{font-weight:800;color:#45666a;min-height:44px;display:flex;align-items:center;padding:0 4px}
+.quiz-editor-list{display:grid;gap:12px}
+.quiz-editor-empty{padding:18px;border:1px dashed #cbdde1;border-radius:14px;background:#f8fbfc;color:var(--muted);text-align:center;line-height:1.6}
+.quiz-editor-card{border:1px solid var(--line);border-radius:15px;padding:14px;background:#f9fbfc}
+.quiz-editor-card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.quiz-editor-card-head strong{font-size:1rem}
+.quiz-editor-card .teacher-field{margin-bottom:10px}
+.quiz-editor-card textarea{min-height:74px!important}
+.quiz-option-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quiz-meta-grid{display:grid;grid-template-columns:160px 1fr;gap:10px}
+.quiz-editor-card input,.quiz-editor-card textarea,.quiz-editor-card select{width:100%;border:1px solid #cfdde3;border-radius:10px;padding:9px 10px;background:#fff;color:var(--ink)}
+.quiz-editor-card label{font-size:.92rem;font-weight:700}
+@media (max-width:720px){
+  .teacher-grid{grid-template-columns:1fr}
+  .teacher-grid .full{grid-column:auto}
+  .quiz-option-grid,.quiz-meta-grid{grid-template-columns:1fr}
+  .project-row{grid-template-columns:1fr 1fr}
+  .project-row .project-select-wrap{grid-column:1/-1}
+  .teacher-actions{justify-content:flex-start}
+}
+
 </style>
 </head>
 <body>
@@ -64,9 +180,13 @@ button:disabled{cursor:not-allowed;opacity:.55}
       <h1 id="pageTitle"></h1>
       <div class="subtitle">互動式閱讀策略測驗</div>
     </div>
-    <button id="settingsBtn" class="icon-btn" aria-label="開啟閱讀設定" title="閱讀設定">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94a7.8 7.8 0 0 0 .05-.94 7.8 7.8 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.3 7.3 0 0 0-1.63-.94L14.38 2.8a.5.5 0 0 0-.49-.4h-3.84a.5.5 0 0 0-.49.4l-.36 2.52a7.3 7.3 0 0 0-1.63.94L5.18 5.3a.5.5 0 0 0-.61.22L2.65 8.84a.5.5 0 0 0 .12.64l2.03 1.58a7.8 7.8 0 0 0-.05.94c0 .32.02.63.05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .61.22l2.39-.96c.5.39 1.04.7 1.63.94l.36 2.52c.04.24.24.4.49.4h3.84c.25 0 .45-.16.49-.4l.36-2.52c.59-.24 1.13-.55 1.63-.94l2.39.96a.5.5 0 0 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"/></svg>
-    </button>
+    <div class="teacher-actions">
+      <span id="saveStatus" class="save-status">● 本機自動儲存</span>
+      <button id="teacherBtn" class="teacher-btn" type="button" aria-label="開啟老師課文與測驗管理">✏️ 老師課文與測驗管理</button>
+      <button id="settingsBtn" class="icon-btn" aria-label="開啟閱讀設定" title="閱讀設定">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94a7.8 7.8 0 0 0 .05-.94 7.8 7.8 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.3 7.3 0 0 0-1.63-.94L14.38 2.8a.5.5 0 0 0-.49-.4h-3.84a.5.5 0 0 0-.49.4l-.36 2.52a7.3 7.3 0 0 0-1.63.94L5.18 5.3a.5.5 0 0 0-.61.22L2.65 8.84a.5.5 0 0 0 .12.64l2.03 1.58a7.8 7.8 0 0 0-.05.94c0 .32.02.63.05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .61.22l2.39-.96c.5.39 1.04.7 1.63.94l.36 2.52c.04.24.24.4.49.4h3.84c.25 0 .45-.16.49-.4l.36-2.52c.59-.24 1.13-.55 1.63-.94l2.39.96a.5.5 0 0 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"/></svg>
+      </button>
+    </div>
   </header>
 
   <div id="fixedReaderTools" class="fixed-reader-tools hidden" role="toolbar" aria-label="固定閱讀工具列">
@@ -88,7 +208,7 @@ button:disabled{cursor:not-allowed;opacity:.55}
       <p>點擊下方「閱讀文章」按鈕，開始逐段閱讀。</p>
       <p>每段文字右方有朗讀按鈕，可以朗讀整個段落。</p>
       <p>選取文章中的文字後，可用上方工具列畫重點或加刪除線；「唸讀」會出現在選取文字附近。</p>
-      <p>閱讀完成後，即可開始閱讀理解測驗。</p>
+      <p>閱讀完成後，即可開始閱讀理解測驗。老師也可以建立自己的課文，重點與刪除線會自動保存在本機。</p>
     </div>
     <button id="beginReadingBtn" class="primary">閱讀文章</button>
   </section>
@@ -125,6 +245,80 @@ button:disabled{cursor:not-allowed;opacity:.55}
   </div>
 </div>
 
+
+<div id="teacherModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="teacherTitle">
+  <div class="modal teacher-modal">
+    <div class="modal-head">
+      <h2 id="teacherTitle">✏️ 老師課文與測驗管理</h2>
+      <button class="icon-btn" id="closeTeacherBtn" aria-label="關閉老師課文與測驗管理">✕</button>
+    </div>
+
+    <div class="project-row">
+      <div class="teacher-field project-select-wrap">
+        <label for="projectSelect">本機已儲存課文</label>
+        <select id="projectSelect"></select>
+      </div>
+      <button id="loadProjectBtn" class="soft" type="button">載入課文</button>
+      <button id="deleteProjectBtn" class="teacher-danger" type="button">刪除</button>
+    </div>
+
+    <div class="hint-box" style="margin-top:12px">
+      <strong>本機保存內容：</strong>課文、作者／來源、自訂閱讀測驗、10 色重點、刪除線、閱讀設定與閱讀進度。<br>
+      「小丑魚和海葵」為預設範例課文，可和其他課文一樣刪除。每篇課文都有自己的題庫與閱讀標記。
+    </div>
+
+    <div class="teacher-grid" style="margin-top:14px">
+      <div class="teacher-field">
+        <label for="teacherTitleInput">文章標題</label>
+        <input id="teacherTitleInput" type="text" autocomplete="off">
+      </div>
+      <div class="teacher-field">
+        <label for="teacherAuthorInput">作者（可留白）</label>
+        <input id="teacherAuthorInput" type="text" autocomplete="off">
+      </div>
+      <div class="teacher-field full">
+        <label for="teacherSourceInput">來源（可留白）</label>
+        <input id="teacherSourceInput" type="text" autocomplete="off">
+      </div>
+      <div class="teacher-field full">
+        <label for="teacherArticleInput">課文全文</label>
+        <textarea id="teacherArticleInput" spellcheck="false" placeholder="請貼上課文。段落之間請空一行；儲存後會依空白行分段。"></textarea>
+        <div class="project-note">段落之間以「空一行」分隔。預設範例課文也可以刪除；新增或修改課文會以本機課文專案保存。</div>
+      </div>
+    </div>
+
+    <section class="quiz-editor" aria-labelledby="quizEditorHeading">
+      <div class="quiz-editor-head">
+        <div>
+          <h3 id="quizEditorHeading">📝 自訂閱讀測驗</h3>
+          <div class="project-note">可為每篇課文分別建立「基礎／一般／進階」題庫。每題為四選一，並可設定正確答案與詳解。</div>
+        </div>
+        <div class="quiz-editor-tools">
+          <div class="teacher-field">
+            <label for="quizEditorDifficulty">編輯難度</label>
+            <select id="quizEditorDifficulty">
+              <option value="basic">基礎</option>
+              <option value="standard" selected>一般</option>
+              <option value="advanced">進階</option>
+            </select>
+          </div>
+          <div id="quizEditorCount" class="quiz-editor-count">0 題</div>
+          <button id="addQuizQuestionBtn" class="soft" type="button">＋ 新增題目</button>
+        </div>
+      </div>
+      <div id="quizEditorList" class="quiz-editor-list"></div>
+    </section>
+
+    <div class="teacher-footer">
+      <input id="importProjectInput" type="file" accept=".json,application/json" class="hidden">
+      <button id="newProjectBtn" class="secondary" type="button">新增空白課文</button>
+      <button id="exportProjectBtn" class="secondary" type="button">匯出目前課文備份</button>
+      <button id="importProjectBtn" class="secondary" type="button">匯入備份</button>
+      <button id="saveProjectBtn" class="primary" type="button">儲存這篇課文</button>
+    </div>
+  </div>
+</div>
+
 <div id="quizSetupModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="quizSetupTitle">
   <div class="modal">
     <div class="modal-head"><h2 id="quizSetupTitle">開始測驗</h2><button class="icon-btn" id="closeQuizSetupBtn" aria-label="關閉測驗設定">✕</button></div>
@@ -144,7 +338,7 @@ button:disabled{cursor:not-allowed;opacity:.55}
 
 <script>
 /* ===== 資料區：文章與題庫集中於此，方便日後更換 ===== */
-const articleData = {
+let articleData = {
   title: "四、小丑魚和海葵",
   author: "",
   source: "",
@@ -158,7 +352,7 @@ const articleData = {
   ]
 };
 
-const quizData = {
+let quizData = {
   basic: [
     {question:"第一段把一大片海葵形容成什麼？",options:{A:"巨大的花園城堡",B:"安靜的海底洞穴",C:"黃色的大魚群",D:"一座珊瑚山"},correctAnswer:"A",explanation:"文章第一段說，漂亮的海葵有不同的顏色和形狀，『形成一個巨大的花園城堡』。",type:"直接提取訊息"},
     {question:"小丑魚和朋友原本在玩什麼？",options:{A:"游泳比賽",B:"躲貓貓",C:"找寶石",D:"追大魚"},correctAnswer:"B",explanation:"文章第三段中，小丑魚告訴大魚：『我們在玩躲貓貓。』",type:"重要細節"},
@@ -207,6 +401,385 @@ const state = {
 const $ = id => document.getElementById(id);
 const speakerSvg = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3Zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12Zm-2.5-8.7v2.06A7 7 0 0 1 18.5 12 7 7 0 0 1 14 18.64v2.06A9 9 0 0 0 20.5 12 9 9 0 0 0 14 3.3Z"/></svg>`;
 
+const STORAGE_KEY = "reading_strategy_teacher_projects_v1";
+const BUILTIN_PROJECT_ID = "builtin-clownfish-anemone";
+let currentProjectId = BUILTIN_PROJECT_ID;
+let storageEnabled = true;
+const builtinArticle = JSON.parse(JSON.stringify(articleData));
+const builtinQuiz = JSON.parse(JSON.stringify(quizData));
+
+function emptyQuizData(){return {basic:[],standard:[],advanced:[]}}
+function deepClone(v){return JSON.parse(JSON.stringify(v))}
+function makeId(){return "project-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7)}
+function hasQuiz(){return ["basic","standard","advanced"].some(k=>Array.isArray(quizData[k])&&quizData[k].length>0)}
+function normalizeQuestion(q={}){
+  const o=q.options||{};
+  return {
+    question:String(q.question||""),
+    options:{A:String(o.A||""),B:String(o.B||""),C:String(o.C||""),D:String(o.D||"")},
+    correctAnswer:["A","B","C","D"].includes(q.correctAnswer)?q.correctAnswer:"A",
+    explanation:String(q.explanation||""),
+    type:String(q.type||"自訂題目")
+  };
+}
+function normalizeQuizData(data){
+  const src=data&&typeof data==="object"?data:{};
+  return {
+    basic:Array.isArray(src.basic)?src.basic.map(normalizeQuestion):[],
+    standard:Array.isArray(src.standard)?src.standard.map(normalizeQuestion):[],
+    advanced:Array.isArray(src.advanced)?src.advanced.map(normalizeQuestion):[]
+  };
+}
+let teacherQuizDraft=normalizeQuizData(quizData);
+function blankQuestion(){return normalizeQuestion({correctAnswer:"A",type:"自訂題目"})}
+function safeProjectName(p){return p?.article?.title?.trim() || "未命名課文"}
+
+function storageRead(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return {lastProjectId:null,projects:{},initialized:false};
+    const data=JSON.parse(raw);
+    if(!data || typeof data!=="object")throw new Error("invalid storage");
+    data.projects=data.projects||{};
+    if(typeof data.initialized!=="boolean")data.initialized=Object.keys(data.projects).length>0;
+    return data;
+  }catch(err){
+    storageEnabled=false;
+    return {lastProjectId:null,projects:{},initialized:false};
+  }
+}
+function storageWrite(data){
+  if(!storageEnabled)return false;
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+    $("saveStatus") && ($("saveStatus").textContent="● 已儲存於本機");
+    return true;
+  }catch(err){
+    storageEnabled=false;
+    $("saveStatus") && ($("saveStatus").textContent="⚠ 無法自動儲存");
+    return false;
+  }
+}
+function builtinProject(){
+  return {
+    id:BUILTIN_PROJECT_ID,
+    article:deepClone(builtinArticle),
+    quizData:deepClone(builtinQuiz),
+    marks:builtinArticle.paragraphs.map(t=>({highlight:Array(t.length).fill(null),strike:Array(t.length).fill(false)})),
+    settings:{fontSize:18,lineHeight:1.8,speechRate:1.0,waitTime:10},
+    revealed:0,
+    updatedAt:new Date().toISOString(),
+    builtin:true
+  }
+}
+function normalizeMarks(article,marks){
+  return article.paragraphs.map((text,i)=>{
+    const m=marks?.[i];
+    const h=Array.isArray(m?.highlight)?m.highlight.slice(0,text.length):[];
+    const s=Array.isArray(m?.strike)?m.strike.slice(0,text.length):[];
+    while(h.length<text.length)h.push(null);
+    while(s.length<text.length)s.push(false);
+    return {highlight:h,strike:s.map(Boolean)};
+  });
+}
+function snapshotCurrentProject(){
+  return {
+    id:currentProjectId,
+    article:deepClone(articleData),
+    quizData:deepClone(quizData),
+    marks:deepClone(state.marks),
+    settings:deepClone(state.settings),
+    revealed:state.revealed,
+    updatedAt:new Date().toISOString(),
+    builtin:currentProjectId===BUILTIN_PROJECT_ID
+  }
+}
+function persistCurrentProject(){
+  if(!storageEnabled || !currentProjectId || !articleData.paragraphs.length)return;
+  const data=storageRead();
+  data.projects[currentProjectId]=snapshotCurrentProject();
+  data.lastProjectId=currentProjectId;
+  data.initialized=true;
+  storageWrite(data);
+}
+function ensureDefaultStored(){
+  const data=storageRead();
+  if(!data.initialized){
+    data.projects[BUILTIN_PROJECT_ID]=builtinProject();
+    data.lastProjectId=BUILTIN_PROJECT_ID;
+    data.initialized=true;
+    storageWrite(data);
+  }
+}
+function projectMap(){
+  const data=storageRead();
+  if(!data.initialized){
+    data.projects[BUILTIN_PROJECT_ID]=builtinProject();
+    data.lastProjectId=BUILTIN_PROJECT_ID;
+    data.initialized=true;
+    storageWrite(data);
+  }
+  return data;
+}
+function renderProjectSelect(){
+  const data=projectMap(), sel=$("projectSelect");
+  if(!sel)return;
+  const arr=Object.values(data.projects).sort((a,b)=>{
+    if(a.id===BUILTIN_PROJECT_ID)return -1;
+    if(b.id===BUILTIN_PROJECT_ID)return 1;
+    return (b.updatedAt||"").localeCompare(a.updatedAt||"");
+  });
+  if(!arr.length){
+    sel.innerHTML='<option value="">目前沒有課文</option>';
+    $("loadProjectBtn") && ($("loadProjectBtn").disabled=true);
+    $("deleteProjectBtn") && ($("deleteProjectBtn").disabled=true);
+    return;
+  }
+  $("loadProjectBtn") && ($("loadProjectBtn").disabled=false);
+  $("deleteProjectBtn") && ($("deleteProjectBtn").disabled=false);
+  sel.innerHTML=arr.map(p=>`<option value="${p.id}" ${p.id===currentProjectId?"selected":""}>${escapeHtml(safeProjectName(p))}${p.id===BUILTIN_PROJECT_ID?"（預設）":""}</option>`).join("");
+}
+function renderQuizEditor(){
+  const level=$("quizEditorDifficulty")?.value||"standard";
+  const list=$("quizEditorList"), pool=teacherQuizDraft[level]||[];
+  if(!list)return;
+  $("quizEditorCount").textContent=`${pool.length} 題`;
+  if(!pool.length){
+    list.innerHTML='<div class="quiz-editor-empty">這個難度目前還沒有題目。<br>按「＋ 新增題目」開始建立閱讀測驗。</div>';
+    return;
+  }
+  list.innerHTML=pool.map((q,i)=>`
+    <div class="quiz-editor-card" data-quiz-index="${i}" data-quiz-level="${level}">
+      <div class="quiz-editor-card-head"><strong>第 ${i+1} 題</strong><button class="teacher-danger" type="button" data-delete-quiz-question="${i}">刪除此題</button></div>
+      <div class="teacher-field"><label>題目</label><textarea data-quiz-field="question" placeholder="請輸入題目">${escapeHtml(q.question)}</textarea></div>
+      <div class="quiz-option-grid">
+        ${["A","B","C","D"].map(k=>`<div class="teacher-field"><label>${k}. 選項</label><input data-quiz-option="${k}" value="${escapeHtml(q.options[k])}" placeholder="選項 ${k}"></div>`).join("")}
+      </div>
+      <div class="quiz-meta-grid">
+        <div class="teacher-field"><label>正確答案</label><select data-quiz-correct>${["A","B","C","D"].map(k=>`<option value="${k}" ${q.correctAnswer===k?"selected":""}>${k}</option>`).join("")}</select></div>
+        <div class="teacher-field"><label>題型（可自訂）</label><input data-quiz-field="type" value="${escapeHtml(q.type||"")}" placeholder="例如：直接提取訊息、推論理解"></div>
+      </div>
+      <div class="teacher-field"><label>詳解</label><textarea data-quiz-field="explanation" placeholder="請說明答案依據，建議指出文章中的線索">${escapeHtml(q.explanation)}</textarea></div>
+    </div>`).join("");
+}
+function addQuizQuestion(){
+  const level=$("quizEditorDifficulty").value;
+  teacherQuizDraft[level].push(blankQuestion());
+  renderQuizEditor();
+  const last=$("quizEditorList").lastElementChild;
+  last?.querySelector('[data-quiz-field="question"]')?.focus();
+}
+function deleteQuizQuestion(index){
+  const level=$("quizEditorDifficulty").value;
+  teacherQuizDraft[level].splice(index,1);
+  renderQuizEditor();
+}
+function updateQuizDraftFromInput(target){
+  const card=target.closest?.(".quiz-editor-card");if(!card)return;
+  const level=card.dataset.quizLevel,index=Number(card.dataset.quizIndex),q=teacherQuizDraft[level]?.[index];if(!q)return;
+  if(target.dataset.quizField)q[target.dataset.quizField]=target.value;
+  if(target.dataset.quizOption)q.options[target.dataset.quizOption]=target.value;
+  if(target.hasAttribute("data-quiz-correct"))q.correctAnswer=target.value;
+}
+function validateQuizDraft(){
+  for(const level of ["basic","standard","advanced"]){
+    const pool=teacherQuizDraft[level]||[];
+    for(let i=0;i<pool.length;i++){
+      const q=pool[i];
+      const hasAnything=q.question.trim()||q.explanation.trim()||Object.values(q.options).some(v=>v.trim());
+      if(!hasAnything)continue;
+      if(!q.question.trim()||Object.values(q.options).some(v=>!v.trim())||!q.explanation.trim()){
+        return {ok:false,level,index:i};
+      }
+    }
+    teacherQuizDraft[level]=pool.filter(q=>q.question.trim()||q.explanation.trim()||Object.values(q.options).some(v=>v.trim()));
+  }
+  return {ok:true};
+}
+function syncTeacherForm(){
+  $("teacherTitleInput").value=articleData.title||"";
+  $("teacherAuthorInput").value=articleData.author||"";
+  $("teacherSourceInput").value=articleData.source||"";
+  $("teacherArticleInput").value=articleData.paragraphs.join("\n\n");
+  teacherQuizDraft=normalizeQuizData(quizData);
+  if($("quizEditorDifficulty"))$("quizEditorDifficulty").value="standard";
+  renderQuizEditor();
+  renderProjectSelect();
+}
+function openTeacher(){
+  persistCurrentProject();
+  syncTeacherForm();
+  $("teacherModal").classList.remove("hidden");
+}
+function closeTeacher(){$("teacherModal").classList.add("hidden")}
+function setEmptyProjectState(){
+  currentProjectId=null;
+  articleData={title:"尚未建立課文",author:"",source:"",paragraphs:[]};
+  quizData=emptyQuizData();
+  state.marks=[];
+  state.revealed=0;
+  resetViewsForProject();
+  syncTeacherForm();
+}
+function resetViewsForProject(){
+  cancelSpeech();clearCountdown();
+  state.selection=null;state.speakingParagraph=null;state.speakingRange=null;
+  state.activeQuestions=[];state.current=0;state.score=0;state.answers=[];state.wrongQuestions=[];
+  state.submitted=false;state.selectedAnswer=null;state.practiceMode=false;
+  $("fixedReaderTools").classList.add("hidden");
+  $("resultView").classList.add("hidden");
+  $("quizView").classList.add("hidden");
+  $("readingView").classList.add("hidden");
+  $("startView").classList.remove("hidden");
+  $("pageTitle").textContent=articleData.title;
+  $("articleMeta").textContent=metadataText();
+  $("quizArticleMeta").textContent=metadataText();
+  updateSelectionStatus();
+  window.getSelection()?.removeAllRanges();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function loadProjectById(id,notify=true){
+  const data=projectMap();
+  const p=data.projects[id];
+  if(!p){showToast("找不到這篇課文。");return}
+  currentProjectId=id;
+  articleData=deepClone(p.article||builtinArticle);
+  quizData=normalizeQuizData(p.quizData);
+  state.settings={fontSize:18,lineHeight:1.8,speechRate:1.0,waitTime:10,...(p.settings||{})};
+  state.marks=normalizeMarks(articleData,p.marks);
+  state.revealed=Math.max(0,Math.min(Number(p.revealed)||0,articleData.paragraphs.length));
+  applySettings();
+  resetViewsForProject();
+  data.lastProjectId=id;storageWrite(data);
+  syncTeacherForm();
+  if(notify)showToast(`已載入「${articleData.title}」`);
+}
+function newBlankProjectForm(){
+  $("teacherTitleInput").value="";
+  $("teacherAuthorInput").value="";
+  $("teacherSourceInput").value="";
+  $("teacherArticleInput").value="";
+  teacherQuizDraft=emptyQuizData();
+  $("quizEditorDifficulty").value="standard";
+  renderQuizEditor();
+  $("teacherTitleInput").focus();
+}
+function parseParagraphs(raw){
+  return raw.replace(/\r\n/g,"\n").split(/\n\s*\n+/).map(s=>s.trim()).filter(Boolean);
+}
+function saveTeacherArticle(){
+  const title=$("teacherTitleInput").value.trim()||"未命名課文";
+  const author=$("teacherAuthorInput").value.trim();
+  const source=$("teacherSourceInput").value.trim();
+  const paragraphs=parseParagraphs($("teacherArticleInput").value);
+  if(!paragraphs.length){showToast("請先輸入課文內容。");return}
+  const check=validateQuizDraft();
+  if(!check.ok){
+    $("quizEditorDifficulty").value=check.level;renderQuizEditor();
+    showToast(`請完成${difficultyLabel(check.level)}第 ${check.index+1} 題的題目、四個選項與詳解。`);
+    return;
+  }
+  const newArticle={title,author,source,paragraphs};
+  const sameAsCurrent=JSON.stringify(newArticle)===JSON.stringify(articleData);
+  const previousMarks=deepClone(state.marks), previousRevealed=state.revealed;
+  let id=currentProjectId;
+  if(currentProjectId===BUILTIN_PROJECT_ID || !sameAsCurrent || !id){
+    id=makeId();
+  }
+  currentProjectId=id;
+  articleData=newArticle;
+  quizData=normalizeQuizData(teacherQuizDraft);
+  state.marks=sameAsCurrent?normalizeMarks(articleData,previousMarks):normalizeMarks(articleData,null);
+  state.revealed=sameAsCurrent?Math.max(0,Math.min(previousRevealed,articleData.paragraphs.length)):0;
+  const data=projectMap();
+  data.projects[id]=snapshotCurrentProject();
+  data.projects[id].builtin=false;
+  data.lastProjectId=id;
+  data.initialized=true;
+  storageWrite(data);
+  resetViewsForProject();
+  syncTeacherForm();
+  closeTeacher();
+  showToast("課文與閱讀測驗已儲存；閱讀重點也會自動保存。");
+}
+
+function deleteSelectedProject(){
+  const id=$("projectSelect").value;
+  const data=projectMap();
+  if(!id || !data.projects[id])return;
+  delete data.projects[id];
+  data.initialized=true;
+  const remaining=Object.keys(data.projects);
+  if(remaining.length){
+    const nextId=(currentProjectId!==id && data.projects[currentProjectId])?currentProjectId:remaining[0];
+    currentProjectId=nextId;
+    data.lastProjectId=nextId;
+    storageWrite(data);
+    loadProjectById(nextId,false);
+  }else{
+    data.lastProjectId=null;
+    storageWrite(data);
+    setEmptyProjectState();
+  }
+  renderProjectSelect();
+  showToast("已刪除課文。");
+}
+function exportCurrentProject(){
+  if(!currentProjectId || !articleData.paragraphs.length){showToast("目前沒有可匯出的課文。");return}
+  persistCurrentProject();
+  const data=projectMap();
+  const p=data.projects[currentProjectId]||snapshotCurrentProject();
+  const payload={format:"reading-strategy-project",version:1,exportedAt:new Date().toISOString(),project:p};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"});
+  const url=URL.createObjectURL(blob);const a=document.createElement("a");
+  a.href=url;a.download=(articleData.title||"閱讀課文").replace(/[\\/:*?"<>|]/g,"_")+"_閱讀專案.json";
+  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+function importProjectFile(file){
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const payload=JSON.parse(reader.result);
+      const p=payload?.project||payload;
+      if(!p?.article?.paragraphs?.length)throw new Error("invalid");
+      const id=makeId();
+      const article={
+        title:String(p.article.title||"匯入課文"),
+        author:String(p.article.author||""),
+        source:String(p.article.source||""),
+        paragraphs:p.article.paragraphs.map(String)
+      };
+      const imported={
+        id,article,
+        quizData:normalizeQuizData(p.quizData),
+        marks:normalizeMarks(article,p.marks),
+        settings:{fontSize:18,lineHeight:1.8,speechRate:1.0,waitTime:10,...(p.settings||{})},
+        revealed:Math.max(0,Math.min(Number(p.revealed)||0,article.paragraphs.length)),
+        updatedAt:new Date().toISOString(),
+        builtin:false
+      };
+      const data=projectMap();data.projects[id]=imported;data.lastProjectId=id;data.initialized=true;storageWrite(data);
+      loadProjectById(id,false);closeTeacher();showToast("備份已匯入。");
+    }catch(err){showToast("無法讀取這個備份檔。");}
+    $("importProjectInput").value="";
+  };
+  reader.readAsText(file,"utf-8");
+}
+function restoreLastProject(){
+  ensureDefaultStored();
+  const data=projectMap();
+  const ids=Object.keys(data.projects);
+  if(!ids.length){
+    setEmptyProjectState();
+  }else{
+    const id=data.projects[data.lastProjectId]?data.lastProjectId:ids[0];
+    loadProjectById(id,false);
+  }
+  if(!storageEnabled && $("saveStatus"))$("saveStatus").textContent="⚠ 請使用匯出備份";
+}
+
+
 function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
 function initMarks(){state.marks=articleData.paragraphs.map(t=>({highlight:Array(t.length).fill(null),strike:Array(t.length).fill(false)}));}
 function metadataText(){return [articleData.author&&`作者：${articleData.author}`,articleData.source&&`來源：${articleData.source}`].filter(Boolean).join("　");}
@@ -245,19 +818,20 @@ function rerenderArticleViews(){
 }
 
 function startReading(){
+  if(!articleData.paragraphs.length){showToast("請先在老師課文管理中新增課文。");openTeacher();return}
   $("startView").classList.add("hidden"); $("fixedReaderTools").classList.remove("hidden"); $("readingView").classList.remove("hidden");
-  state.revealed=1; renderReadingParagraphs(); updateReadingControl();
+  state.revealed=Math.max(1,state.revealed||0); renderReadingParagraphs(); updateReadingControl();persistCurrentProject();
 }
 function clearCountdown(){if(state.timer){clearInterval(state.timer);state.timer=null}}
 function updateReadingControl(){
   clearCountdown(); const next=$("nextParagraphBtn"), start=$("openQuizSetupBtn");
-  if(state.revealed>=articleData.paragraphs.length){next.classList.add("hidden");start.classList.remove("hidden");return}
+  if(state.revealed>=articleData.paragraphs.length){next.classList.add("hidden");start.classList.remove("hidden");start.textContent=hasQuiz()?"開始測驗":"設定閱讀測驗";return}
   start.classList.add("hidden"); next.classList.remove("hidden");
   if(state.settings.waitTime===0){next.disabled=false;next.textContent="顯示下一段";return}
   state.timerRemaining=state.settings.waitTime; next.disabled=true; next.textContent=`請稍候（${state.timerRemaining}）`;
   state.timer=setInterval(()=>{state.timerRemaining--; if(state.timerRemaining<=0){clearCountdown();next.disabled=false;next.textContent="顯示下一段"}else next.textContent=`請稍候（${state.timerRemaining}）`;},1000);
 }
-function revealNext(){if(state.revealed>=articleData.paragraphs.length)return;state.revealed++;renderReadingParagraphs();updateReadingControl();setTimeout(()=>{const el=document.querySelector(`#readingParagraphs [data-card-index="${state.revealed-1}"]`);el?.scrollIntoView({behavior:"smooth",block:"center"})},20)}
+function revealNext(){if(state.revealed>=articleData.paragraphs.length)return;state.revealed++;renderReadingParagraphs();updateReadingControl();persistCurrentProject();setTimeout(()=>{const el=document.querySelector(`#readingParagraphs [data-card-index="${state.revealed-1}"]`);el?.scrollIntoView({behavior:"smooth",block:"center"})},20)}
 
 function cancelSpeech(){
   if("speechSynthesis" in window) window.speechSynthesis.cancel();
@@ -307,7 +881,7 @@ function updateSelectionStatus(){
   el.textContent=text?`已選取：${text.length>18?text.slice(0,18)+"…":text}`:"請先選取文章文字";
 }
 function requireSelection(){if(state.selection)return true;showToast("請先選取文章中的文字。 ");return false}
-function finishMarkAction(){state.speakingRange=null;rerenderArticleViews();hideTools();window.getSelection()?.removeAllRanges();updateSelectionStatus()}
+function finishMarkAction(){state.speakingRange=null;rerenderArticleViews();hideTools();window.getSelection()?.removeAllRanges();updateSelectionStatus();persistCurrentProject()}
 function applyHighlight(color){if(!requireSelection())return;const s=state.selection;for(let i=s.start;i<s.end;i++)state.marks[s.index].highlight[i]=color;finishMarkAction()}
 function toggleStrike(){if(!requireSelection())return;const s=state.selection;const all=state.marks[s.index].strike.slice(s.start,s.end).every(Boolean);for(let i=s.start;i<s.end;i++)state.marks[s.index].strike[i]=!all;finishMarkAction()}
 function cancelMark(kind){if(!requireSelection())return;const s=state.selection;for(let i=s.start;i<s.end;i++){if(kind==="highlight"||kind==="all")state.marks[s.index].highlight[i]=null;if(kind==="strike"||kind==="all")state.marks[s.index].strike[i]=false}finishMarkAction()}
@@ -320,10 +894,22 @@ function syncSettingsUI(){
 }
 function applySettings(){document.documentElement.style.setProperty("--article-font",`${state.settings.fontSize}px`);document.documentElement.style.setProperty("--article-line",state.settings.lineHeight);syncSettingsUI()}
 
-function openQuizSetup(){$("quizSetupModal").classList.remove("hidden");$("difficultySelect").value=state.difficulty;$("questionCountSelect").value=String(state.requestedCount)}
+function updateQuizSetupAvailability(){
+  const sel=$("difficultySelect");
+  const counts={basic:(quizData.basic||[]).length,standard:(quizData.standard||[]).length,advanced:(quizData.advanced||[]).length};
+  [...sel.options].forEach(o=>o.disabled=!counts[o.value]);
+  if(!counts[state.difficulty])state.difficulty=["standard","basic","advanced"].find(k=>counts[k])||"standard";
+  sel.value=state.difficulty;
+  $("questionCountSelect").value=String(state.requestedCount);
+  $("questionCountNote").textContent=`本篇題庫：基礎 ${counts.basic} 題、一般 ${counts.standard} 題、進階 ${counts.advanced} 題。題數超過可用題目時，會以實際題數進行。`;
+}
+function openQuizSetup(){
+  if(!hasQuiz()){persistCurrentProject();showToast("這篇課文尚未建立閱讀測驗，請先新增題目。");openTeacher();return}
+  updateQuizSetupAvailability();$("quizSetupModal").classList.remove("hidden");
+}
 function closeQuizSetup(){$("quizSetupModal").classList.add("hidden")}
 function startQuiz(){
-  cancelSpeech();clearCountdown();state.difficulty=$("difficultySelect").value;state.requestedCount=Number($("questionCountSelect").value);const pool=quizData[state.difficulty];const n=Math.min(state.requestedCount,pool.length);
+  cancelSpeech();clearCountdown();state.difficulty=$("difficultySelect").value;state.requestedCount=Number($("questionCountSelect").value);const pool=quizData[state.difficulty]||[];if(!pool.length){closeQuizSetup();showToast("這篇課文尚未設定題庫。");return}const n=Math.min(state.requestedCount,pool.length);
   if(n<state.requestedCount)showToast(`本篇此難度提供 ${pool.length} 題，將以 ${pool.length} 題進行。`);
   state.activeQuestions=pool.slice(0,n).map(q=>({...q,options:{...q.options}}));state.current=0;state.score=0;state.answers=[];state.wrongQuestions=[];state.submitted=false;state.selectedAnswer=null;state.practiceMode=false;
   closeQuizSetup();$("fixedReaderTools").classList.remove("hidden");$("readingView").classList.add("hidden");$("resultView").classList.add("hidden");$("quizView").classList.remove("hidden");renderQuizParagraphs();renderQuestion();window.scrollTo({top:0,behavior:"smooth"});
@@ -358,17 +944,28 @@ function practiceWrong(){
   if(!state.wrongQuestions.length){reviewWrong();return}const copy=state.wrongQuestions.map(w=>({...w.question,options:{...w.question.options}}));state.activeQuestions=copy;state.current=0;state.score=0;state.answers=[];state.wrongQuestions=[];state.submitted=false;state.selectedAnswer=null;state.practiceMode=true;$("resultView").classList.add("hidden");$("fixedReaderTools").classList.remove("hidden");$("quizView").classList.remove("hidden");renderQuizParagraphs();renderQuestion();window.scrollTo({top:0,behavior:"smooth"});
 }
 function restartAll(){
-  cancelSpeech();clearCountdown();initMarks();state.revealed=0;state.activeQuestions=[];state.current=0;state.score=0;state.answers=[];state.wrongQuestions=[];state.submitted=false;state.selectedAnswer=null;state.practiceMode=false;state.selection=null;hideTools();$("fixedReaderTools").classList.add("hidden");updateSelectionStatus();$("resultView").classList.add("hidden");$("quizView").classList.add("hidden");$("readingView").classList.add("hidden");$("startView").classList.remove("hidden");window.getSelection()?.removeAllRanges();window.scrollTo({top:0,behavior:"smooth"});
+  cancelSpeech();clearCountdown();initMarks();state.revealed=0;persistCurrentProject();state.activeQuestions=[];state.current=0;state.score=0;state.answers=[];state.wrongQuestions=[];state.submitted=false;state.selectedAnswer=null;state.practiceMode=false;state.selection=null;hideTools();$("fixedReaderTools").classList.add("hidden");updateSelectionStatus();$("resultView").classList.add("hidden");$("quizView").classList.add("hidden");$("readingView").classList.add("hidden");$("startView").classList.remove("hidden");window.getSelection()?.removeAllRanges();window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function buildPalette(){
   $("fixedPalette").innerHTML=HIGHLIGHTS.map(([key,color,label])=>`<button class="swatch" type="button" style="background:${color}" data-fixed-color="${key}" title="${label}" aria-label="使用${label}螢光筆"></button>`).join("");
 }
 function init(){
-  initMarks();buildPalette();$("pageTitle").textContent=articleData.title;$("articleMeta").textContent=metadataText();$("quizArticleMeta").textContent=metadataText();applySettings();
+  initMarks();buildPalette();$("pageTitle").textContent=articleData.title;$("articleMeta").textContent=metadataText();$("quizArticleMeta").textContent=metadataText();applySettings();restoreLastProject();
   $("beginReadingBtn").addEventListener("click",startReading);$("nextParagraphBtn").addEventListener("click",revealNext);$("openQuizSetupBtn").addEventListener("click",openQuizSetup);
+  $("teacherBtn").addEventListener("click",openTeacher);$("closeTeacherBtn").addEventListener("click",closeTeacher);$("teacherModal").addEventListener("click",e=>{if(e.target===$("teacherModal"))closeTeacher()});
+  $("loadProjectBtn").addEventListener("click",()=>{const id=$("projectSelect").value;closeTeacher();loadProjectById(id)});
+  $("deleteProjectBtn").addEventListener("click",deleteSelectedProject);$("newProjectBtn").addEventListener("click",newBlankProjectForm);
+  $("saveProjectBtn").addEventListener("click",saveTeacherArticle);$("exportProjectBtn").addEventListener("click",exportCurrentProject);
+  $("importProjectBtn").addEventListener("click",()=>$("importProjectInput").click());$("importProjectInput").addEventListener("change",e=>importProjectFile(e.target.files?.[0]));
+  $("quizEditorDifficulty").addEventListener("change",renderQuizEditor);
+  $("addQuizQuestionBtn").addEventListener("click",addQuizQuestion);
+  $("quizEditorList").addEventListener("input",e=>updateQuizDraftFromInput(e.target));
+  $("quizEditorList").addEventListener("change",e=>updateQuizDraftFromInput(e.target));
+  $("quizEditorList").addEventListener("click",e=>{const b=e.target.closest("[data-delete-quiz-question]");if(b)deleteQuizQuestion(Number(b.dataset.deleteQuizQuestion));});
+
   $("settingsBtn").addEventListener("click",openSettings);$("closeSettingsBtn").addEventListener("click",closeSettings);$("settingsModal").addEventListener("click",e=>{if(e.target===$("settingsModal"))closeSettings()});
-  $("fontSizeInput").addEventListener("input",e=>{state.settings.fontSize=Number(e.target.value);applySettings()});$("lineHeightInput").addEventListener("input",e=>{state.settings.lineHeight=Number(e.target.value);applySettings()});$("speechRateInput").addEventListener("input",e=>{state.settings.speechRate=Number(e.target.value);syncSettingsUI()});$("waitTimeSelect").addEventListener("change",e=>{state.settings.waitTime=Number(e.target.value);syncSettingsUI();if(!$("readingView").classList.contains("hidden")&&state.revealed>0&&state.revealed<articleData.paragraphs.length)updateReadingControl()});
+  $("fontSizeInput").addEventListener("input",e=>{state.settings.fontSize=Number(e.target.value);applySettings();persistCurrentProject()});$("lineHeightInput").addEventListener("input",e=>{state.settings.lineHeight=Number(e.target.value);applySettings();persistCurrentProject()});$("speechRateInput").addEventListener("input",e=>{state.settings.speechRate=Number(e.target.value);syncSettingsUI();persistCurrentProject()});$("waitTimeSelect").addEventListener("change",e=>{state.settings.waitTime=Number(e.target.value);syncSettingsUI();persistCurrentProject();if(!$("readingView").classList.contains("hidden")&&state.revealed>0&&state.revealed<articleData.paragraphs.length)updateReadingControl()});
   $("closeQuizSetupBtn").addEventListener("click",closeQuizSetup);$("cancelQuizSetupBtn").addEventListener("click",closeQuizSetup);$("quizSetupModal").addEventListener("click",e=>{if(e.target===$("quizSetupModal"))closeQuizSetup()});$("startQuizBtn").addEventListener("click",startQuiz);$("difficultySelect").addEventListener("change",e=>state.difficulty=e.target.value);$("questionCountSelect").addEventListener("change",e=>state.requestedCount=Number(e.target.value));
   document.addEventListener("click",e=>{
     const sp=e.target.closest("[data-speak-paragraph]");if(sp){e.preventDefault();e.stopPropagation();speakParagraph(Number(sp.dataset.speakParagraph));return}
@@ -385,10 +982,12 @@ function init(){
     if(e.target.closest("#fixedCancelAllBtn")){e.preventDefault();cancelMark("all");return}
     if(!e.target.closest("#floatingTools")&&!e.target.closest("#fixedReaderTools")&&!getParagraphEl(e.target))hideTools();
   });
-  document.addEventListener("keydown",e=>{if(e.target.closest?.("[data-speak-option]"))return;const opt=e.target.matches?.(".option")?e.target:null;if(opt&&(e.key==="Enter"||e.key===" ")){e.preventDefault();selectAnswer(opt.dataset.option)}if(e.key==="Escape"){closeSettings();closeQuizSetup();hideTools()}});
-  document.addEventListener("mouseup",()=>setTimeout(captureSelection,0));document.addEventListener("touchend",()=>setTimeout(captureSelection,80),{passive:true});window.addEventListener("resize",()=>{if(!$("floatingTools").classList.contains("hidden")&&state.selection)positionTools(state.selection.rect)});window.addEventListener("beforeunload",()=>{"speechSynthesis" in window&&window.speechSynthesis.cancel()});
+  document.addEventListener("keydown",e=>{if(e.target.closest?.("[data-speak-option]"))return;const opt=e.target.matches?.(".option")?e.target:null;if(opt&&(e.key==="Enter"||e.key===" ")){e.preventDefault();selectAnswer(opt.dataset.option)}if(e.key==="Escape"){closeSettings();closeQuizSetup();closeTeacher();hideTools()}});
+  document.addEventListener("mouseup",()=>setTimeout(captureSelection,0));document.addEventListener("touchend",()=>setTimeout(captureSelection,80),{passive:true});window.addEventListener("resize",()=>{if(!$("floatingTools").classList.contains("hidden")&&state.selection)positionTools(state.selection.rect)});window.addEventListener("beforeunload",()=>{persistCurrentProject();"speechSynthesis" in window&&window.speechSynthesis.cancel()});
 }
 init();
 </script>
 </body>
 </html>
+互動式閱讀策略測驗_老師自訂課文_本機儲存版.html
+HTML
